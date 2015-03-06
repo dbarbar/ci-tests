@@ -254,5 +254,3 @@ projects[diff][version] = 3.2
 ; a webform_ab node.
 ; See https://www.drupal.org/node/2389357
 projects[webform_ab][patch][2389357] = http://www.drupal.org/files/issues/entity_malformed_exception_cron.patch
-
-projects[springboard][download][branch] = 1621fc311b2766b197620da703ed1da477927a46
