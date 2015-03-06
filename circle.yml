@@ -19,6 +19,7 @@ test:
     - "cd docroot && ../vendor/bin/drush si sbsetup install_configure_form.update_status_module='array(FALSE,FALSE)' --account-name=admin --account-pass=admin --account-mail=david.barbarisi@jacksonriver.com --clean-url=1 --site-mail=david.barbarisi@jacksonriver.com --site-name=4x --db-url=mysql://ubuntu:@127.0.0.1:3306/circle_test --yes"
     - "cd docroot && ../vendor/bin/drush cc all && ../vendor/bin/drush sql-dump --result-file=$CIRCLE_ARTIFACTS/dump.sql"
     - "cd docroot && ../vendor/bin/drush status"
+    - 'curl --max-time 20 http://local.dev:8080 | grep "DONATE"'
   override:
     - "cd docroot && ../vendor/bin/drush -l http://local.dev:8080 en springboard_tests -y"
     - "cd docroot && ../vendor/bin/drush -l http://local.dev:8080 sb-test-run springboard --xml=$CIRCLE_TEST_REPORTS"
