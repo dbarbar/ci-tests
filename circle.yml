@@ -10,6 +10,7 @@ dependencies:
     - sudo composer self-update
   post:
     - ./vendor/bin/drush make springboard-mtsb.make docroot
+    - "chmod -R 777 docroot/sites/default"
     - cp vhost.conf /etc/apache2/sites-available/local.dev
     - a2ensite local.dev
     - sudo service apache2 restart
