@@ -1,0 +1,24 @@
+machine:
+  hosts:
+    local.dev: 127.0.0.1
+  php:
+    version: 5.4.21
+dependencies:
+  pre:
+    - sudo composer self-update
+  post:
+    - ./vendor/bin/drush make springboard-mtsb.make docroot
+    - cp vhost.conf /etc/apache2/sites-available
+    - a2ensite vhost
+    - sudo service apache2 restart
+test:
+  pre:
+    - "cd docroot && ../vendor/bin/drush si sbsetup install_configure_form.update_status_module='array(FALSE,FALSE)' --account-name=admin --account-pass=admin --account-mail=david.barbarisi@jacksonriver.com --clean-url=1 --site-mail=david.barbarisi@jacksonriver.com --site-name=4x --db-url=mysql://ubuntu:@127.0.0.1:3306/circle_test --yes"
+    - "cd docroot && ../vendor/bin/drush cc all && ../vendor/bin/drush sql-dump --result-file=$CIRCLE_ARTIFACTS/dump.sql"
+    - "cd docroot && ../vendor/bin/drush status"
+  override:
+    - "cd docroot && ../vendor/bin/drush -l http://local.dev en springboard_tests -y"
+    - "cd docroot && ../vendor/bin/drush -l http://local.dev sb-test-run springboard --xml=$CIRCLE_ARTIFACTS"
+  post:
+    - "cp *.make $CIRCLE_ARTIFACTS"
+    - tar zcvf $CIRCLE_ARTIFACTS/package.tar.gz docroot -c docroot
