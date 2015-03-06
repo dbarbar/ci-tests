@@ -4,6 +4,8 @@ machine:
   php:
     version: 5.4.21
 dependencies:
+  cache_directories:
+    - "~/.drush/cache"
   pre:
     - sudo composer self-update
   post:
@@ -17,8 +19,8 @@ test:
     - "cd docroot && ../vendor/bin/drush cc all && ../vendor/bin/drush sql-dump --result-file=$CIRCLE_ARTIFACTS/dump.sql"
     - "cd docroot && ../vendor/bin/drush status"
   override:
-    - "cd docroot && ../vendor/bin/drush -l http://local.dev en springboard_tests -y"
-    - "cd docroot && ../vendor/bin/drush -l http://local.dev sb-test-run springboard --xml=$CIRCLE_TEST_REPORTS"
+    - "cd docroot && ../vendor/bin/drush -l http://local.dev:8080 en springboard_tests -y"
+    - "cd docroot && ../vendor/bin/drush -l http://local.dev:8080 sb-test-run springboard --xml=$CIRCLE_TEST_REPORTS"
   post:
     - "cp *.make $CIRCLE_ARTIFACTS"
     - tar zcvf $CIRCLE_ARTIFACTS/package.tar.gz docroot -c docroot
