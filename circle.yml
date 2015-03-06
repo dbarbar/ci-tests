@@ -8,8 +8,8 @@ dependencies:
     - sudo composer self-update
   post:
     - ./vendor/bin/drush make springboard-mtsb.make docroot
-    - cp vhost.conf /etc/apache2/sites-available
-    - a2ensite vhost
+    - cp vhost.conf /etc/apache2/sites-available/local.dev
+    - a2ensite local.dev
     - sudo service apache2 restart
 test:
   pre:
@@ -18,7 +18,7 @@ test:
     - "cd docroot && ../vendor/bin/drush status"
   override:
     - "cd docroot && ../vendor/bin/drush -l http://local.dev en springboard_tests -y"
-    - "cd docroot && ../vendor/bin/drush -l http://local.dev sb-test-run springboard --xml=$CIRCLE_ARTIFACTS"
+    - "cd docroot && ../vendor/bin/drush -l http://local.dev sb-test-run springboard --xml=$CIRCLE_TEST_REPORTS"
   post:
     - "cp *.make $CIRCLE_ARTIFACTS"
     - tar zcvf $CIRCLE_ARTIFACTS/package.tar.gz docroot -c docroot
